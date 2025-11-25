@@ -1,0 +1,2 @@
+[2025-11-16 14:15:25.599691] Extração OK - 10020 registros - C:\airflow\database\RZ\chokepoints\2025-11-16\chokepoints_completo_20251116.parquet
+[2025-11-16 14:16:51.010473] Extração OK - 10020 registros - C:\airflow\database\RZ\chokepoints_completo_20251116.parquet

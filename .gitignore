@@ -1,0 +1,7 @@
+logs/
+database/
+__pycache__/
+*.pyc
+.airflow/
+.idea/
+.vscode/

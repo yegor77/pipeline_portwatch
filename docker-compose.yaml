@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    networks:
+      - airflow
+
+  airflow-init:
+    image: apache/airflow:2.9.2
+    entrypoint: ["bash", "-c"]
+    command:
+      - |
+        airflow db init &&
+        airflow users create \
+          --username admin \
+          --password admin \
+          --firstname Airflow \
+          --lastname Admin \
+          --role Admin \
+          --email admin@example.com
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    depends_on:
+      - postgres
+    networks:
+      - airflow
+
+  scheduler:
+    image: apache/airflow:2.9.2
+    command: scheduler
+    restart: always
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - C:\airflow\scripts:/opt/airflow/scripts
+      - C:\airflow\database:/opt/airflow/database
+    depends_on:
+      - airflow-init
+    networks:
+      - airflow
+
+  webserver:
+    image: apache/airflow:2.9.2
+    command: webserver
+    restart: always
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - C:\airflow\scripts:/opt/airflow/scripts
+      - C:\airflow\database:/opt/airflow/database
+    depends_on:
+      - scheduler
+    networks:
+      - airflow
+
+networks:
+  airflow:
+
+volumes:
+  postgres-db-volume:
