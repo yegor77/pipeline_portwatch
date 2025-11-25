@@ -23,21 +23,24 @@ O objetivo é coletar, tratar e disponibilizar dados históricos sobre tráfego 
 
 # 🧱 Estrutura do Projeto
 
-/dags
+- /dags
+
 └── DAG_Portwatch.py
 
-/scripts
+- /scripts
+
 ├── Portwatch_rz.py
 ├── Portwatch_sz.py
 └── Portwatch_cz.py
 
-/database
+- /database
+
 ├── RZ/
 ├── SZ/
 └── CZ/
 
-.gitignore
-requirements.txt
+- .gitignore
+- requirements.txt
 
 # 🚀 Fluxo Geral do Pipeline
 
